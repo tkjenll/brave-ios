@@ -14,21 +14,17 @@ class SearchQuickEnginesViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        isRecording = false //snapshotRecordMode
-        
-//        let testEngine = OpenSearchEngine(engineID: "ATester", shortName: "ATester", image: UIImage(), searchTemplate: "http://firefox.com/find?q={searchTerm}", suggestTemplate: nil, isCustomEngine: true)
-//        let engines = SearchEngines(files: profile.files)
-//        try! engines.addSearchEngine(testEngine)
-        
-        
+        isRecording = snapshotRecordMode
     }
 
     override func tearDown() {
         subject = nil
+        profile = nil
         
         super.tearDown()
     }
 
+    /// This test is demostrating a direct Search Engine List Snapshot
     func testDefaultQuickSearchEngines() {
         profile = MockProfile()
         
@@ -37,13 +33,24 @@ class SearchQuickEnginesViewControllerTests: XCTestCase {
         verifyViewController(subject)
     }
     
-    func testCustomQuickSearchEngines() throws {
+    /// This test is demostrating a direct Search Engine List Snapshot
+    /// Demostrates the when snapshot fails for some aritifical reason that should be ignored with tolerance
+    func testDefaultQuickSearchEnginesWithTolerance() {
+        profile = MockProfile()
+        
+        subject = SearchQuickEnginesViewController(profile: profile)
 
+        verifyViewController(
+            subject,
+            testDevices: TestDevice.defaultDevices.with(tolerance: .defaultSnapshotTolerance))    }
+    
+    /// This test is demostrating a snapshot of  a custom search engines added to the list
+    func testSingleCustomQuickSearchEngine() {
         let testEngine = OpenSearchEngine(
-            engineID: "ATester",
-            shortName: "ATester",
-            image: UIImage(),
-            searchTemplate: "http://firefox.com/find?q={searchTerm}",
+            engineID: "ACustomEngine",
+            shortName: "Sauron's Eye - SE Example",
+            image: #imageLiteral(resourceName: "defaultFavicon"),
+            searchTemplate: "http://brave.com/find?q={searchTerm}",
             suggestTemplate: nil,
             isCustomEngine: true)
         
@@ -54,6 +61,42 @@ class SearchQuickEnginesViewControllerTests: XCTestCase {
         subject = SearchQuickEnginesViewController(profile: profile)
 
         verifyViewController(subject)
+        
+        try! profile.searchEngines.deleteCustomEngine(testEngine)
+    }
+    
+    /// This test is demostrating a snapshot of list of custom search engines added to the list
+    /// Demostrates the condition when content doesnt fit screen and has to scroll down
+    /// In order to snapshot entire list we have to use a utility method that supports height multiplier
+    func testMultipleCustomQuickSearchEngine() {
+        var testEngineList = [OpenSearchEngine]()
+            
+        for i in 1...6 {
+            testEngineList.append(OpenSearchEngine(
+                                    engineID: "ACustomEngine \(i)",
+                                    shortName: "Sauron's Eye - SE Example",
+                                    image: #imageLiteral(resourceName: "defaultFavicon"),
+                                    searchTemplate: "http://brave.com/find?q={searchTerm}",
+                                    suggestTemplate: nil,
+                                    isCustomEngine: true))
+        }
+        
+        profile = MockProfile()
+        
+        _ = testEngineList.map { testEngine in
+            try! profile.searchEngines.addSearchEngine(testEngine)
+        }
+
+        subject = SearchQuickEnginesViewController(profile: profile)
+
+        verifyViewController(
+            subject,
+            testDevices: TestDevice.defaultDevices.with(heightMultipliers: [(.iPhoneSe, 1.2)]))
+
+        
+        _ = testEngineList.map { testEngine in
+            try! profile.searchEngines.deleteCustomEngine(testEngine)
+        }
     }
 
     private var subject: SearchQuickEnginesViewController!

@@ -26,7 +26,7 @@ struct TestDevice {
         // MARK: Internal
 
         case iPhone8Plus
-        case iPhoneSeGen1
+        case iPhoneSe
         case iPhoneXr
         case iPadPro11
 
@@ -36,7 +36,7 @@ struct TestDevice {
             switch self {
             case .iPhone8Plus:
                 return ViewImageConfig.iPhone8Plus(orientation)
-            case .iPhoneSeGen1:
+            case .iPhoneSe:
                 return ViewImageConfig.iPhoneSe(orientation)
             case .iPhoneXr:
                 return ViewImageConfig.iPhoneXr(orientation)
@@ -56,7 +56,7 @@ struct TestDevice {
         } else {
             return [
                 TestDevice(model: .iPhone8Plus),
-                TestDevice(model: .iPhoneSeGen1),
+                TestDevice(model: .iPhoneSe),
                 TestDevice(model: .iPhoneXr)
             ]
         }
@@ -64,7 +64,7 @@ struct TestDevice {
 
     init(
         orientation: ViewImageConfig.Orientation = .portrait,
-        model: Model = .iPhoneSeGen1,
+        model: Model = .iPhoneSe,
         heightMultiplier: CGFloat = 1,
         tolerance: Float = 0,
         userInterfaceStyle: UIUserInterfaceStyle = .light)
