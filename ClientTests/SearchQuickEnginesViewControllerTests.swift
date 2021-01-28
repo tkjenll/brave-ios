@@ -14,28 +14,44 @@ class SearchQuickEnginesViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        isRecording = true //snapshotRecordMode
+        isRecording = false //snapshotRecordMode
         
 //        let testEngine = OpenSearchEngine(engineID: "ATester", shortName: "ATester", image: UIImage(), searchTemplate: "http://firefox.com/find?q={searchTerm}", suggestTemplate: nil, isCustomEngine: true)
-        let profile = MockProfile()
 //        let engines = SearchEngines(files: profile.files)
 //        try! engines.addSearchEngine(testEngine)
         
-        subject = SearchQuickEnginesViewController(profile: profile)
         
     }
 
     override func tearDown() {
         subject = nil
-        profile = nil
         
         super.tearDown()
     }
 
-    func testExample() throws {
+    func testDefaultQuickSearchEngines() {
+        subject = SearchQuickEnginesViewController(profile: profile)
+
+        verifyViewController(subject)
+    }
+    
+    func testCustomQuickSearchEngines() throws {
+
+        let testEngine = OpenSearchEngine(
+            engineID: "ATester",
+            shortName: "ATester",
+            image: UIImage(),
+            searchTemplate: "http://firefox.com/find?q={searchTerm}",
+            suggestTemplate: nil,
+            isCustomEngine: true)
+
+        try! profile.searchEngines.addSearchEngine(testEngine)
+
+        subject = SearchQuickEnginesViewController(profile: profile)
+
         verifyViewController(subject)
     }
 
     private var subject: SearchQuickEnginesViewController!
-    private var profile: Profile!
+    private var profile = MockProfile()
 }
