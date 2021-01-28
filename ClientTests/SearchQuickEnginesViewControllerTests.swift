@@ -30,6 +30,8 @@ class SearchQuickEnginesViewControllerTests: XCTestCase {
     }
 
     func testDefaultQuickSearchEngines() {
+        profile = MockProfile()
+        
         subject = SearchQuickEnginesViewController(profile: profile)
 
         verifyViewController(subject)
@@ -44,6 +46,8 @@ class SearchQuickEnginesViewControllerTests: XCTestCase {
             searchTemplate: "http://firefox.com/find?q={searchTerm}",
             suggestTemplate: nil,
             isCustomEngine: true)
+        
+        profile = MockProfile()
 
         try! profile.searchEngines.addSearchEngine(testEngine)
 
@@ -53,5 +57,5 @@ class SearchQuickEnginesViewControllerTests: XCTestCase {
     }
 
     private var subject: SearchQuickEnginesViewController!
-    private var profile = MockProfile()
+    private var profile: Profile!
 }
