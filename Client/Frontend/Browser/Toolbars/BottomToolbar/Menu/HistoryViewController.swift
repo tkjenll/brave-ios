@@ -77,7 +77,7 @@ class HistoryViewController: SiteTableViewController, ToolbarUrlActionsProtocol 
             spinner.startAnimating()
             isHistoryRefreshing = true
 
-            Historyv2.waitForHistoryServiceLoaded { [weak self] in
+            historyManager.waitForHistoryServiceLoaded { [weak self] in
                 guard let self = self else { return }
                 
                 self.reloadData() {
