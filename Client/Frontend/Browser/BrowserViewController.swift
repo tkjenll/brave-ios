@@ -182,6 +182,9 @@ class BrowserViewController: UIViewController {
     /// Data Source object used to determine blocking stats
     //let benchmarkBlockingDataSource = BlockingSummaryDataSource()
     var benchmarkBlockingDataSource: BlockingSummaryDataSource?
+    
+    /// ObservedObject for placing Password Menu Item in Settings Menu
+    @ObservedObject var showPasswordsInApplication = Preferences.General.showPasswordsInApplicationMenu
 
     init(profile: Profile,
          tabManager: TabManager,

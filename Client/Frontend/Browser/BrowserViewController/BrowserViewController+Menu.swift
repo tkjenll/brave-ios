@@ -7,8 +7,10 @@ import Foundation
 import SwiftUI
 import BraveUI
 import Shared
+import BraveShared
 
 extension BrowserViewController {
+    
     func featuresMenuSection(_ menuController: MenuViewController) -> some View {
         VStack(spacing: 0) {
             VPNMenuButton(
@@ -41,6 +43,12 @@ extension BrowserViewController {
             MenuItemButton(icon: #imageLiteral(resourceName: "menu-downloads").template, title: Strings.downloadsMenuItem) {
                 let vc = DownloadsPanel(profile: self.profile)
                 menuController.pushInnerMenu(vc)
+            }
+            if showPasswordsInApplication.value {
+                MenuItemButton(icon: #imageLiteral(resourceName: "settings-save-logins").template, title: Strings.passwordsMenuItem) {
+                    let vc = LoginInfoViewController(profile: self.profile)
+                    menuController.pushInnerMenu(vc)
+                }
             }
             MenuItemButton(icon: #imageLiteral(resourceName: "playlist_menu").template, title: Strings.playlistMenuItem) {
                 let playlistController = (UIApplication.shared.delegate as? AppDelegate)?.playlistRestorationController ?? PlaylistViewController()
